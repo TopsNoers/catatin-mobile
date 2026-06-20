@@ -26,14 +26,16 @@ workflows:
       - name: Build iOS Application
         script: |
           # ---------------------------------------------------------------------
-          # NOTE: We are building WITHOUT code signing because you need an Apple 
-          # Developer account to sign iOS apps. This will generate a .app file.
+          # NOTE: Building for a physical device requires an Apple Developer Account
+          # and a Provisioning Profile. Since we are hitting a Code Signing error, 
+          # we will build for the iOS Simulator instead just to verify the code 
+          # compiles successfully on a Mac.
           # ---------------------------------------------------------------------
-          flutter build ios --release --no-codesign
+          flutter build ios --debug --simulator
           
-          # If you HAVE an Apple Developer account and have configured iOS code 
-          # signing in Codemagic, comment out the line above and uncomment the 
-          # line below to build a fully signed .ipa file:
+          # If you HAVE an Apple Developer account ($99/yr) and want to build a 
+          # real .ipa file, you must configure iOS code signing in Codemagic. 
+          # Once configured, comment out the line above and uncomment the line below:
           # flutter build ipa --release
           
     artifacts:
