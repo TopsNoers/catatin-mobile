@@ -1,0 +1,47 @@
+workflows:
+  ios-workflow:
+    name: iOS Build Workflow
+    # Uses a Mac instance to build your project
+    instance_type: mac_mini_m2
+    max_build_duration: 120
+    
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      # Once you have an Apple Developer Account, you can set up your certificates 
+      # in the Codemagic UI and uncomment this group to use them:
+      # groups:
+      #   - ios_credentials
+      
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+          
+      - name: Install CocoaPods dependencies
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+          
+      - name: Build iOS Application
+        script: |
+          # ---------------------------------------------------------------------
+          # NOTE: We are building WITHOUT code signing because you need an Apple 
+          # Developer account to sign iOS apps. This will generate a .app file.
+          # ---------------------------------------------------------------------
+          flutter build ios --release --no-codesign
+          
+          # If you HAVE an Apple Developer account and have configured iOS code 
+          # signing in Codemagic, comment out the line above and uncomment the 
+          # line below to build a fully signed .ipa file:
+          # flutter build ipa --release
+          
+    artifacts:
+      - build/ios/iphoneos/*.app
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      
+    # publishing:
+    #   email:
+    #     recipients:
+    #       - your-email@example.com
