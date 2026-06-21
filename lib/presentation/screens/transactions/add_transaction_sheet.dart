@@ -291,7 +291,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet>
           TextFormField(
             controller: _amountController,
             keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            inputFormatters: [ThousandsSeparatorInputFormatter()],
             style: const TextStyle(
               color: Colors.white,
               fontSize: 28,
